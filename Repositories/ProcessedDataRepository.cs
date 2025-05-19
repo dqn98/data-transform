@@ -1,43 +1,46 @@
-using DataTransform.Core.Interfaces;
-using DataTransform.Core.Models;
-using DataTransform.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using DataTransform.Core.Models;
+using DataTransform.Data;
+using DataTransform.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
-namespace DataTransform.Infrastructure.Repositories
+namespace DataTransform.Repositories
 {
-    public class ProcessedDataRepository : IDataRepository<UserEvent>
+    public class ProcessedDataRepository(ProcessedDbContext context) : IDataRepository<UserEvent>
     {
-        private readonly ProcessedDbContext _context;
-
-        public ProcessedDataRepository(ProcessedDbContext context)
+        public IQueryable<UserEvent> GetAllAsync()
         {
-            _context = context;
+            return context.UserEvents.AsQueryable();
         }
 
-        public async Task<IEnumerable<UserEvent>> GetAllAsync(CancellationToken cancellationToken = default)
+        public IQueryable<UserEvent> FindAsync(Expression<Func<UserEvent, bool>> predicate)
         {
-            return await _context.UserEvents.ToListAsync(cancellationToken);
-        }
-
-        public async Task<IEnumerable<UserEvent>> FindAsync(Expression<Func<UserEvent, bool>> predicate, CancellationToken cancellationToken = default)
-        {
-            return await _context.UserEvents.Where(predicate).ToListAsync(cancellationToken);
+            return context.UserEvents.Where(predicate).AsQueryable();
         }
 
         public async Task AddAsync(UserEvent entity, CancellationToken cancellationToken = default)
         {
-            await _context.UserEvents.AddAsync(entity, cancellationToken);
+            await context.UserEvents.AddAsync(entity, cancellationToken);
+        }
+        
+        public void Update(UserEvent entity, CancellationToken cancellationToken = default)
+        {
+            context.UserEvents.Update(entity);
+        }
+
+        public void UpdateRange(IEnumerable<UserEvent> entities, CancellationToken cancellationToken = default)
+        {
+            context.UserEvents.UpdateRange(entities);
         }
 
         public async Task AddRangeAsync(IEnumerable<UserEvent> entities, CancellationToken cancellationToken = default)
         {
-            await _context.UserEvents.AddRangeAsync(entities, cancellationToken);
+            await context.UserEvents.AddRangeAsync(entities, cancellationToken);
         }
 
         public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            await _context.SaveChangesAsync(cancellationToken);
+            await context.SaveChangesAsync(cancellationToken);
         }
     }
 }

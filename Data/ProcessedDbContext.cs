@@ -1,14 +1,10 @@
 using DataTransform.Core.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace DataTransform.Infrastructure.Data
+namespace DataTransform.Data
 {
-    public class ProcessedDbContext : DbContext
+    public class ProcessedDbContext(DbContextOptions<ProcessedDbContext> options) : DbContext(options)
     {
-        public ProcessedDbContext(DbContextOptions<ProcessedDbContext> options) : base(options)
-        {
-        }
-
         public DbSet<UserEvent> UserEvents { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

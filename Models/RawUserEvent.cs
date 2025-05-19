@@ -1,4 +1,4 @@
-namespace DataTransform.Core.Models
+namespace DataTransform.Models
 {
     public class RawUserEvent
     {
@@ -10,5 +10,9 @@ namespace DataTransform.Core.Models
         public string ClientInfo { get; set; } = string.Empty;
         public string? GeoData { get; set; }
         public string? TransactionData { get; set; }
+        
+        public DateTime CreatedDate { get; set; }
+        
+        public DateTime? ProcessedDate { get; set; }
     }
 }

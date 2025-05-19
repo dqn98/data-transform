@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DataTransform")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c39a58e8851d70225e3287a932b659a0f4db4dd7")]
 [assembly: System.Reflection.AssemblyProductAttribute("DataTransform")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DataTransform")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

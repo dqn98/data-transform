@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\learning\\DataTransform\\DataTransform.csproj": {}
+    "C:\\Users\\NamDinh\\RiderProjects\\data-transform\\DataTransform.csproj": {}
   },
   "projects": {
-    "D:\\learning\\DataTransform\\DataTransform.csproj": {
+    "C:\\Users\\NamDinh\\RiderProjects\\data-transform\\DataTransform.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\learning\\DataTransform\\DataTransform.csproj",
+        "projectUniqueName": "C:\\Users\\NamDinh\\RiderProjects\\data-transform\\DataTransform.csproj",
         "projectName": "DataTransform",
-        "projectPath": "D:\\learning\\DataTransform\\DataTransform.csproj",
-        "packagesPath": "C:\\Users\\namqd\\.nuget\\packages\\",
-        "outputPath": "D:\\learning\\DataTransform\\obj\\",
+        "projectPath": "C:\\Users\\NamDinh\\RiderProjects\\data-transform\\DataTransform.csproj",
+        "packagesPath": "C:\\Users\\NamDinh\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\NamDinh\\RiderProjects\\data-transform\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\namqd\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\NamDinh\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -44,7 +44,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.100"
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net9.0": {
@@ -106,7 +106,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.201/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

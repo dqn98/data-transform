@@ -1,14 +1,10 @@
-using DataTransform.Core.Models;
+using DataTransform.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace DataTransform.Infrastructure.Data
+namespace DataTransform.Data
 {
-    public class RawDbContext : DbContext
+    public class RawDbContext(DbContextOptions<RawDbContext> options) : DbContext(options)
     {
-        public RawDbContext(DbContextOptions<RawDbContext> options) : base(options)
-        {
-        }
-
         public DbSet<RawUserEvent> RawUserEvents { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -27,6 +23,8 @@ namespace DataTransform.Infrastructure.Data
                 entity.Property(e => e.ClientInfo).HasColumnName("client_info").HasMaxLength(255);
                 entity.Property(e => e.GeoData).HasColumnName("geo_data").HasMaxLength(255);
                 entity.Property(e => e.TransactionData).HasColumnName("transaction_data").HasMaxLength(255);
+                entity.Property(e => e.CreatedDate).HasColumnName("created_date");
+                entity.Property(e => e.ProcessedDate).HasColumnName("processed_date");
             });
         }
     }
