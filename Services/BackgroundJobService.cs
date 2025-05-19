@@ -13,6 +13,9 @@ namespace DataTransform.Services
             IDataTransformService dataTransformService,
             ILogger<BackgroundJobService> logger)
         {
+            ArgumentNullException.ThrowIfNull(dataTransformService);
+            ArgumentNullException.ThrowIfNull(logger);
+            
             _dataTransformService = dataTransformService;
             _logger = logger;
         }
@@ -25,7 +28,7 @@ namespace DataTransform.Services
             RecurringJob.AddOrUpdate(
                 "data-transformation-job",
                 () => _dataTransformService.TransformDataAsync(CancellationToken.None),
-                "*/30 * * * *" // Cron expression for every 30 minutes
+                "*/1 * * * *" // Cron expression for every 30 minutes
             );
             
             _logger.LogInformation("Data transformation job scheduled successfully");

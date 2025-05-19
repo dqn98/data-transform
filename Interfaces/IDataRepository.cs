@@ -1,13 +1,15 @@
 using System.Linq.Expressions;
 
-namespace DataTransform.Core.Interfaces
+namespace DataTransform.Interfaces
 {
     public interface IDataRepository<T> where T : class
     {
-        Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default);
-        Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default);
+        IQueryable<T> GetAllAsync();
+        IQueryable<T> FindAsync(Expression<Func<T, bool>> predicate);
         Task AddAsync(T entity, CancellationToken cancellationToken = default);
         Task AddRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default);
+        void Update(T entity, CancellationToken cancellationToken = default);
+        void UpdateRange(IEnumerable<T> entities, CancellationToken cancellationToken = default);
         Task SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }

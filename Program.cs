@@ -1,7 +1,9 @@
 using DataTransform.Core.Interfaces;
 using DataTransform.Core.Models;
-using DataTransform.Infrastructure.Data;
-using DataTransform.Infrastructure.Repositories;
+using DataTransform.Data;
+using DataTransform.Interfaces;
+using DataTransform.Models;
+using DataTransform.Repositories;
 using DataTransform.Services;
 using Hangfire;
 using Hangfire.PostgreSql;
@@ -51,7 +53,7 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

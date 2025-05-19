@@ -1,15 +1,7 @@
-using DataTransform.Core.Models;
-using DataTransform.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+using DataTransform.Data;
+using DataTransform.Models;
 
 namespace DataTransform.Services
 {
@@ -22,6 +14,9 @@ namespace DataTransform.Services
             IServiceProvider serviceProvider,
             ILogger<DatabaseSeederService> logger)
         {
+            ArgumentNullException.ThrowIfNull(serviceProvider);
+            ArgumentNullException.ThrowIfNull(logger);
+            
             _serviceProvider = serviceProvider;
             _logger = logger;
         }
@@ -68,7 +63,9 @@ namespace DataTransform.Services
                     EventDetails = JsonConvert.SerializeObject(new { event_name = "user_login", status = "success" }),
                     Timestamp = DateTime.UtcNow.AddDays(-1),
                     ClientInfo = JsonConvert.SerializeObject(new { app_version = "1.2.0", device_type = "mobile", os_version = "iOS 15.4" }),
-                    GeoData = "New York, USA"
+                    GeoData = "New York, USA",
+                    CreatedDate = DateTime.Today.AddDays(-1),
+                    ProcessedDate = null
                 },
                 new RawUserEvent
                 {
@@ -78,7 +75,9 @@ namespace DataTransform.Services
                     Timestamp = DateTime.UtcNow.AddHours(-12),
                     ClientInfo = JsonConvert.SerializeObject(new { app_version = "1.1.9", device_type = "tablet", os_version = "Android 12" }),
                     GeoData = "London, UK",
-                    TransactionData = JsonConvert.SerializeObject(new { amount = 29.99, status = "completed", transaction_id = "TX789012", payment_method = "credit_card" })
+                    TransactionData = JsonConvert.SerializeObject(new { amount = 29.99, status = "completed", transaction_id = "TX789012", payment_method = "credit_card" }),
+                    CreatedDate = DateTime.Today.AddDays(-1),
+                    ProcessedDate = null
                 },
                 new RawUserEvent
                 {
@@ -87,7 +86,9 @@ namespace DataTransform.Services
                     EventDetails = JsonConvert.SerializeObject(new { event_name = "new_user_registration", referral = "direct" }),
                     Timestamp = DateTime.UtcNow.AddDays(-2),
                     ClientInfo = JsonConvert.SerializeObject(new { app_version = "1.2.0", device_type = "desktop", os_version = "Windows 11" }),
-                    GeoData = "Sydney, Australia"
+                    GeoData = "Sydney, Australia",
+                    CreatedDate = DateTime.Today.AddDays(-1),
+                    ProcessedDate = null
                 },
                 new RawUserEvent
                 {
@@ -97,7 +98,9 @@ namespace DataTransform.Services
                     Timestamp = DateTime.UtcNow.AddHours(-6),
                     ClientInfo = JsonConvert.SerializeObject(new { app_version = "1.2.0", device_type = "mobile", os_version = "iOS 15.4" }),
                     GeoData = "New York, USA",
-                    TransactionData = JsonConvert.SerializeObject(new { amount = 99.99, status = "completed", transaction_id = "TX789013", payment_method = "paypal" })
+                    TransactionData = JsonConvert.SerializeObject(new { amount = 99.99, status = "completed", transaction_id = "TX789013", payment_method = "paypal" }),
+                    CreatedDate = DateTime.Today.AddDays(-1),
+                    ProcessedDate = null
                 },
                 new RawUserEvent
                 {
@@ -106,7 +109,9 @@ namespace DataTransform.Services
                     EventDetails = JsonConvert.SerializeObject(new { event_name = "user_login", status = "failed", reason = "invalid_password" }),
                     Timestamp = DateTime.UtcNow.AddHours(-2),
                     ClientInfo = JsonConvert.SerializeObject(new { app_version = "1.1.8", device_type = "mobile", os_version = "Android 11" }),
-                    GeoData = "Berlin, Germany"
+                    GeoData = "Berlin, Germany",
+                    CreatedDate = DateTime.Today.AddDays(-1),
+                    ProcessedDate = null
                 }
             };
 
