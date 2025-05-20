@@ -19,13 +19,29 @@ namespace DataTransform.Data
                 entity.Property(e => e.Id)
                     .HasColumnName("id")
                     .UseIdentityColumn();
-                entity.Property(e => e.UserIdentifier).HasColumnName("user_identifier");
-                entity.Property(e => e.EventType).HasColumnName("event_type").HasMaxLength(100);
-                entity.Property(e => e.EventDetails).HasColumnName("event_details").HasMaxLength(255);
+            
+                // Required fields
+                entity.Property(e => e.SpecTrack).HasColumnName("spec_track").HasMaxLength(100).IsRequired();
+                entity.Property(e => e.ProductArea).HasColumnName("product_area").HasMaxLength(100).IsRequired();
+                entity.Property(e => e.ProductValueStream).HasColumnName("product_value_stream").HasMaxLength(100).IsRequired();
+                entity.Property(e => e.UiScreenPath).HasColumnName("ui_screen_path").HasMaxLength(255).IsRequired();
+                entity.Property(e => e.UiScreenState).HasColumnName("ui_screen_state").HasMaxLength(100).IsRequired();
+                entity.Property(e => e.FlowConversion).HasColumnName("flow_conversion").HasMaxLength(100).IsRequired();
+            
+                // Conditional field
+                entity.Property(e => e.FlowRevenue).HasColumnName("flow_revenue").HasColumnType("decimal(10, 2)");
+            
+                // Optional fields
+                entity.Property(e => e.UiInputMethod).HasColumnName("ui_input_method").HasMaxLength(100);
+                entity.Property(e => e.DeviceId).HasColumnName("device_id").HasMaxLength(100);
+                entity.Property(e => e.DevSessionId).HasColumnName("dev_session_id").HasMaxLength(100);
+                entity.Property(e => e.DevErrorCode).HasColumnName("dev_error_code").HasMaxLength(100);
+                entity.Property(e => e.DevErrorDescription).HasColumnName("dev_error_description").HasMaxLength(255);
+                entity.Property(e => e.DevInputDataCaptured).HasColumnName("dev_input_data_captured").HasMaxLength(255);
+                entity.Property(e => e.DevSdkVersion).HasColumnName("dev_sdk_version").HasMaxLength(100);
+            
+                // System fields
                 entity.Property(e => e.Timestamp).HasColumnName("timestamp");
-                entity.Property(e => e.ClientInfo).HasColumnName("client_info").HasMaxLength(255);
-                entity.Property(e => e.GeoData).HasColumnName("geo_data").HasMaxLength(255);
-                entity.Property(e => e.TransactionData).HasColumnName("transaction_data").HasMaxLength(255);
                 entity.Property(e => e.CreatedDate).HasColumnName("created_date");
                 entity.Property(e => e.ProcessedDate).HasColumnName("processed_date");
             });
