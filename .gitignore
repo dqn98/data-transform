@@ -2,6 +2,8 @@
 bin/
 obj/
 out/
+node_modules/ 
+client-app/node_modules/
 
 # Visual Studio files
 .idea
