@@ -50,7 +50,8 @@ namespace DataTransform.Services
                     {
                         var processedEvent = TransformEvent(rawEvent);
                         processedEvents.Add(processedEvent);
-                        rawEvent.ProcessedDate = DateTime.Now;
+                        // When updating ProcessedDate
+                        rawEvent.ProcessedDate = DateTime.UtcNow; // Use UTC time
                     }
                     catch (Exception ex)
                     {
@@ -84,11 +85,11 @@ namespace DataTransform.Services
             // Create processed event
             return new UserEvent
             {
-                EventId = rawEvent.Id, // Using the raw ID as the event ID
+                // Don't set EventId - let the database generate it
                 UserId = rawEvent.UserIdentifier,
                 EventName = ExtractEventName(rawEvent.EventDetails),
                 EventType = rawEvent.EventType,
-                EventTimestamp = rawEvent.Timestamp,
+                EventTimestamp = DateTime.SpecifyKind(rawEvent.Timestamp, DateTimeKind.Utc),
                 AppVersion = clientInfo.appVersion,
                 DeviceType = clientInfo.deviceType,
                 OsVersion = clientInfo.osVersion,

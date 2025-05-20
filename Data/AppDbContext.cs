@@ -1,21 +1,43 @@
 using DataTransform.Core.Models;
+using DataTransform.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataTransform.Data
 {
-    public class ProcessedDbContext(DbContextOptions<ProcessedDbContext> options) : DbContext(options)
+    public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
     {
+        public DbSet<RawUserEvent> RawUserEvents { get; set; } = null!;
         public DbSet<UserEvent> UserEvents { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Configure RawUserEvent entity
+            modelBuilder.Entity<RawUserEvent>().ToTable("raw_user_events");
+            modelBuilder.Entity<RawUserEvent>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .UseIdentityColumn();
+                entity.Property(e => e.UserIdentifier).HasColumnName("user_identifier");
+                entity.Property(e => e.EventType).HasColumnName("event_type").HasMaxLength(100);
+                entity.Property(e => e.EventDetails).HasColumnName("event_details").HasMaxLength(255);
+                entity.Property(e => e.Timestamp).HasColumnName("timestamp");
+                entity.Property(e => e.ClientInfo).HasColumnName("client_info").HasMaxLength(255);
+                entity.Property(e => e.GeoData).HasColumnName("geo_data").HasMaxLength(255);
+                entity.Property(e => e.TransactionData).HasColumnName("transaction_data").HasMaxLength(255);
+                entity.Property(e => e.CreatedDate).HasColumnName("created_date");
+                entity.Property(e => e.ProcessedDate).HasColumnName("processed_date");
+            });
+
+            // Configure UserEvent entity
             modelBuilder.Entity<UserEvent>().ToTable("user_events");
-            
-            // Configure entity properties based on the provided schema
             modelBuilder.Entity<UserEvent>(entity =>
             {
                 entity.HasKey(e => e.EventId);
-                entity.Property(e => e.EventId).HasColumnName("event_id");
+                entity.Property(e => e.EventId)
+                    .HasColumnName("id")
+                    .UseIdentityColumn();
                 entity.Property(e => e.UserId).HasColumnName("user_id");
                 entity.Property(e => e.EventName).HasColumnName("event_name").HasMaxLength(255);
                 entity.Property(e => e.EventType).HasColumnName("event_type").HasMaxLength(100);

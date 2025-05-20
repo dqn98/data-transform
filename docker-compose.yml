@@ -7,36 +7,23 @@ services:
       - "8080:80"
       - "8081:443"
     depends_on:
-      - raw-db
-      - processed-db
+      - app-db
       - hangfire-db
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__RawDatabase=Host=raw-db;Database=raw_data;Username=postgres;Password=postgres;
-      - ConnectionStrings__ProcessedDatabase=Host=processed-db;Database=processed_data;Username=postgres;Password=postgres;
+      - ConnectionStrings__AppDatabase=Host=app-db;Database=data_transform;Username=postgres;Password=postgres;
       - ConnectionStrings__HangfireDatabase=Host=hangfire-db;Database=hangfire;Username=postgres;Password=postgres;
 
-  raw-db:
+  app-db:
     image: postgres:14
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=raw_data
+      - POSTGRES_DB=data_transform
     ports:
       - "5432:5432"
     volumes:
-      - raw-data:/var/lib/postgresql/data
-
-  processed-db:
-    image: postgres:14
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=processed_data
-    ports:
-      - "5433:5432"
-    volumes:
-      - processed-data:/var/lib/postgresql/data
+      - app-data:/var/lib/postgresql/data
 
   hangfire-db:
     image: postgres:14
@@ -45,11 +32,10 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=hangfire
     ports:
-      - "5434:5432"
+      - "5433:5432"
     volumes:
       - hangfire-data:/var/lib/postgresql/data
 
 volumes:
-  raw-data:
-  processed-data:
+  app-data:
   hangfire-data:

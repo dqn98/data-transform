@@ -14,9 +14,6 @@ namespace DataTransform.Services
             IServiceProvider serviceProvider,
             ILogger<DatabaseSeederService> logger)
         {
-            ArgumentNullException.ThrowIfNull(serviceProvider);
-            ArgumentNullException.ThrowIfNull(logger);
-            
             _serviceProvider = serviceProvider;
             _logger = logger;
         }
@@ -24,25 +21,23 @@ namespace DataTransform.Services
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("Starting database seeder service");
-            
+
             using var scope = _serviceProvider.CreateScope();
-            var rawDbContext = scope.ServiceProvider.GetRequiredService<RawDbContext>();
-            var processedDbContext = scope.ServiceProvider.GetRequiredService<ProcessedDbContext>();
-            
-            // Ensure databases are created
-            await rawDbContext.Database.EnsureCreatedAsync(cancellationToken);
-            await processedDbContext.Database.EnsureCreatedAsync(cancellationToken);
-            
-            // Check if raw database is empty
-            if (!await rawDbContext.RawUserEvents.AnyAsync(cancellationToken))
+            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+            // Check if database exists, if not create it
+            await dbContext.Database.EnsureCreatedAsync(cancellationToken);
+
+            // Check if there's any data in the raw_user_events table
+            if (!await dbContext.RawUserEvents.AnyAsync(cancellationToken))
             {
-                _logger.LogInformation("Raw database is empty. Seeding initial data...");
-                await SeedRawDataAsync(rawDbContext, cancellationToken);
-                _logger.LogInformation("Raw database seeded successfully");
+                _logger.LogInformation("Seeding raw user events data");
+                await SeedRawDataAsync(dbContext, cancellationToken);
+                _logger.LogInformation("Raw user events data seeded successfully");
             }
             else
             {
-                _logger.LogInformation("Raw database already contains data. Skipping seed operation");
+                _logger.LogInformation("Raw user events data already exists, skipping seeding");
             }
         }
 
@@ -52,7 +47,7 @@ namespace DataTransform.Services
             return Task.CompletedTask;
         }
 
-        private async Task SeedRawDataAsync(RawDbContext context, CancellationToken cancellationToken)
+        private async Task SeedRawDataAsync(AppDbContext context, CancellationToken cancellationToken)
         {
             var rawEvents = new List<RawUserEvent>
             {
@@ -64,7 +59,7 @@ namespace DataTransform.Services
                     Timestamp = DateTime.UtcNow.AddDays(-1),
                     ClientInfo = JsonConvert.SerializeObject(new { app_version = "1.2.0", device_type = "mobile", os_version = "iOS 15.4" }),
                     GeoData = "New York, USA",
-                    CreatedDate = DateTime.Today.AddDays(-1),
+                    CreatedDate = DateTime.UtcNow.AddMinutes(-2), // Use UTC time
                     ProcessedDate = null
                 },
                 new RawUserEvent
@@ -76,7 +71,7 @@ namespace DataTransform.Services
                     ClientInfo = JsonConvert.SerializeObject(new { app_version = "1.1.9", device_type = "tablet", os_version = "Android 12" }),
                     GeoData = "London, UK",
                     TransactionData = JsonConvert.SerializeObject(new { amount = 29.99, status = "completed", transaction_id = "TX789012", payment_method = "credit_card" }),
-                    CreatedDate = DateTime.Today.AddDays(-1),
+                    CreatedDate = DateTime.UtcNow.AddMinutes(-10), // Use UTC time
                     ProcessedDate = null
                 },
                 new RawUserEvent
@@ -87,7 +82,7 @@ namespace DataTransform.Services
                     Timestamp = DateTime.UtcNow.AddDays(-2),
                     ClientInfo = JsonConvert.SerializeObject(new { app_version = "1.2.0", device_type = "desktop", os_version = "Windows 11" }),
                     GeoData = "Sydney, Australia",
-                    CreatedDate = DateTime.Today.AddDays(-1),
+                    CreatedDate = DateTime.UtcNow.AddMinutes(-11), // Use UTC time
                     ProcessedDate = null
                 },
                 new RawUserEvent
@@ -99,7 +94,7 @@ namespace DataTransform.Services
                     ClientInfo = JsonConvert.SerializeObject(new { app_version = "1.2.0", device_type = "mobile", os_version = "iOS 15.4" }),
                     GeoData = "New York, USA",
                     TransactionData = JsonConvert.SerializeObject(new { amount = 99.99, status = "completed", transaction_id = "TX789013", payment_method = "paypal" }),
-                    CreatedDate = DateTime.Today.AddDays(-1),
+                    CreatedDate = DateTime.UtcNow.AddDays(-1),
                     ProcessedDate = null
                 },
                 new RawUserEvent
@@ -110,7 +105,7 @@ namespace DataTransform.Services
                     Timestamp = DateTime.UtcNow.AddHours(-2),
                     ClientInfo = JsonConvert.SerializeObject(new { app_version = "1.1.8", device_type = "mobile", os_version = "Android 11" }),
                     GeoData = "Berlin, Germany",
-                    CreatedDate = DateTime.Today.AddDays(-1),
+                    CreatedDate = DateTime.UtcNow.AddDays(-1),
                     ProcessedDate = null
                 }
             };

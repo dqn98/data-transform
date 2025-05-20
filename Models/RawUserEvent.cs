@@ -1,7 +1,10 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace DataTransform.Models
 {
     public class RawUserEvent
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
         public long UserIdentifier { get; set; }
         public string EventType { get; set; } = string.Empty;
@@ -14,5 +17,11 @@ namespace DataTransform.Models
         public DateTime CreatedDate { get; set; }
         
         public DateTime? ProcessedDate { get; set; }
+        
+        // When setting CreatedDate
+        public RawUserEvent()
+        {
+            CreatedDate = DateTime.UtcNow; // Use UTC time
+        }
     }
 }

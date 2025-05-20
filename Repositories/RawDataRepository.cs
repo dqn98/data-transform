@@ -5,7 +5,7 @@ using DataTransform.Models;
 
 namespace DataTransform.Repositories
 {
-    public class RawDataRepository(RawDbContext context) : IDataRepository<RawUserEvent>
+    public class RawDataRepository(AppDbContext context) : IDataRepository<RawUserEvent>
     {
         public IQueryable<RawUserEvent> GetAllAsync()
         {
@@ -19,21 +19,67 @@ namespace DataTransform.Repositories
 
         public async Task AddAsync(RawUserEvent entity, CancellationToken cancellationToken = default)
         {
+            // Ensure all DateTime values are UTC
+            if (entity.Timestamp.Kind != DateTimeKind.Utc)
+                entity.Timestamp = DateTime.SpecifyKind(entity.Timestamp, DateTimeKind.Utc);
+            
+            if (entity.CreatedDate.Kind != DateTimeKind.Utc)
+                entity.CreatedDate = DateTime.SpecifyKind(entity.CreatedDate, DateTimeKind.Utc);
+            
+            if (entity.ProcessedDate.HasValue && entity.ProcessedDate.Value.Kind != DateTimeKind.Utc)
+                entity.ProcessedDate = DateTime.SpecifyKind(entity.ProcessedDate.Value, DateTimeKind.Utc);
+                
             await context.RawUserEvents.AddAsync(entity, cancellationToken);
         }
 
         public async Task AddRangeAsync(IEnumerable<RawUserEvent> entities, CancellationToken cancellationToken = default)
         {
+            // Ensure all DateTime values are UTC
+            foreach (var entity in entities)
+            {
+                if (entity.Timestamp.Kind != DateTimeKind.Utc)
+                    entity.Timestamp = DateTime.SpecifyKind(entity.Timestamp, DateTimeKind.Utc);
+                
+                if (entity.CreatedDate.Kind != DateTimeKind.Utc)
+                    entity.CreatedDate = DateTime.SpecifyKind(entity.CreatedDate, DateTimeKind.Utc);
+                
+                if (entity.ProcessedDate.HasValue && entity.ProcessedDate.Value.Kind != DateTimeKind.Utc)
+                    entity.ProcessedDate = DateTime.SpecifyKind(entity.ProcessedDate.Value, DateTimeKind.Utc);
+            }
+            
             await context.RawUserEvents.AddRangeAsync(entities, cancellationToken);
         }
 
         public void Update(RawUserEvent entity, CancellationToken cancellationToken = default)
         {
-             context.RawUserEvents.Update(entity);
+            // Ensure all DateTime values are UTC
+            if (entity.Timestamp.Kind != DateTimeKind.Utc)
+                entity.Timestamp = DateTime.SpecifyKind(entity.Timestamp, DateTimeKind.Utc);
+            
+            if (entity.CreatedDate.Kind != DateTimeKind.Utc)
+                entity.CreatedDate = DateTime.SpecifyKind(entity.CreatedDate, DateTimeKind.Utc);
+            
+            if (entity.ProcessedDate.HasValue && entity.ProcessedDate.Value.Kind != DateTimeKind.Utc)
+                entity.ProcessedDate = DateTime.SpecifyKind(entity.ProcessedDate.Value, DateTimeKind.Utc);
+                
+            context.RawUserEvents.Update(entity);
         }
 
         public void UpdateRange(IEnumerable<RawUserEvent> entities, CancellationToken cancellationToken = default)
         {
+            // Ensure all DateTime values are UTC
+            foreach (var entity in entities)
+            {
+                if (entity.Timestamp.Kind != DateTimeKind.Utc)
+                    entity.Timestamp = DateTime.SpecifyKind(entity.Timestamp, DateTimeKind.Utc);
+                
+                if (entity.CreatedDate.Kind != DateTimeKind.Utc)
+                    entity.CreatedDate = DateTime.SpecifyKind(entity.CreatedDate, DateTimeKind.Utc);
+                
+                if (entity.ProcessedDate.HasValue && entity.ProcessedDate.Value.Kind != DateTimeKind.Utc)
+                    entity.ProcessedDate = DateTime.SpecifyKind(entity.ProcessedDate.Value, DateTimeKind.Utc);
+            }
+            
             context.RawUserEvents.UpdateRange(entities);
         }
 

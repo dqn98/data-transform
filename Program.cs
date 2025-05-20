@@ -17,12 +17,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 // builder.Services.AddSwaggerGen();
 
-// Configure database contexts
-builder.Services.AddDbContext<RawDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("RawDatabase")));
-
-builder.Services.AddDbContext<ProcessedDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("ProcessedDatabase")));
+// Configure unified database context
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("AppDatabase")));
 
 // Register repositories
 builder.Services.AddScoped<IDataRepository<RawUserEvent>, RawDataRepository>();
