@@ -4,6 +4,7 @@ obj/
 out/
 
 # Visual Studio files
+.idea
 .vs/
 *.user
 *.userosscache
