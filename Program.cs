@@ -26,6 +26,15 @@ builder.Services.AddCors(options =>
                       });
 });
 
+builder.Logging.ClearProviders(); // Optional: Clears default providers like Debug, EventSource
+builder.Logging.AddSimpleConsole(options =>
+{
+    options.IncludeScopes = true; // Set to true if you use logging scopes, false otherwise
+    options.SingleLine = true;    // Outputs each log message on a single line
+    options.TimestampFormat = "yyyy-MM-dd HH:mm:ss.fff "; // Defines the timestamp format
+    // You can also customize color behavior if needed, e.g., options.ColorBehavior = LoggerColorBehavior.Enabled;
+});
+
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
