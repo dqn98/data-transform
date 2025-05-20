@@ -1,6 +1,6 @@
-@DataTransform_HostAddress = http://localhost:5226
+@DataTransform_HostAddress = http://localhost:7000/
 
-GET {{DataTransform_HostAddress}}/weatherforecast/
+POST {{DataTransform_HostAddress}}/api/DataTransform/trigger
 Accept: application/json
 
 ###
