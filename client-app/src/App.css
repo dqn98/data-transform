@@ -1,0 +1,151 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f4f7f6; /* Lighter background for the body */
+  color: #333; /* Default text color */
+}
+
+.App {
+  text-align: center;
+}
+
+.App-header {
+  background-color: #007bff; /* A more vibrant header color */
+  padding: 20px 0;
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.App-header h1 {
+  margin: 0;
+  font-size: 2em;
+}
+
+.App-main {
+  padding: 20px;
+  max-width: 800px; /* Max width for content */
+  margin: 20px auto; /* Center the main content */
+  background-color: #fff; /* White background for the main content area */
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+}
+
+.controls-container {
+  margin-bottom: 30px;
+}
+
+.trigger-button {
+  background-color: #28a745; /* Green for primary action */
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  font-size: 1.1em;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.trigger-button:hover:not(:disabled) {
+  background-color: #218838; /* Darker green on hover */
+}
+
+.trigger-button:active:not(:disabled) {
+  transform: translateY(1px); /* Slight press effect */
+}
+
+.trigger-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.spinner {
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  width: 18px;
+  height: 18px;
+  animation: spin 1s ease-in-out infinite;
+  margin-right: 10px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.message-container {
+  padding: 15px;
+  margin-top: 20px;
+  border-radius: 5px;
+  text-align: left;
+  word-break: break-word; /* Ensure long messages wrap */
+}
+
+.success-message {
+  background-color: #e6ffed; /* Light green background */
+  color: #22863a; /* Darker green text */
+  border: 1px solid #a0e8af;
+}
+
+.error-message {
+  background-color: #ffeef0; /* Light red background */
+  color: #d73a49; /* Darker red text */
+  border: 1px solid #ffccd1;
+}
+
+/* Remove default Create React App logo animation if not used */
+.App-logo {
+  display: none; 
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

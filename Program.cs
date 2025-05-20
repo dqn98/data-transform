@@ -12,6 +12,20 @@ using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Define a CORS policy
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.WithOrigins("http://localhost:3000") // React app's default port
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+                      });
+});
+
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -51,6 +65,10 @@ if (app.Environment.IsDevelopment())
 }
 
 // app.UseHttpsRedirection();
+
+app.UseStaticFiles(); // Add this line to serve static files from wwwroot
+
+app.UseCors(MyAllowSpecificOrigins);
 
 app.UseAuthorization();
 
