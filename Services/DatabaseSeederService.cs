@@ -50,65 +50,93 @@ namespace DataTransform.Services
         private async Task SeedRawDataAsync(AppDbContext context, CancellationToken cancellationToken)
         {
             var rawEvents = new List<RawUserEvent>
+                {
+                    new RawUserEvent
+                    {
+                        SpecTrack = "0.1.0",
+                        ProductArea = "payments-and-transaction",
+                        ProductValueStream = "tap-payment",
+                        UiScreenPath = "/001-value-stream/screen-grouping/path-type/description",
+                        UiScreenState = "functional",
+                        FlowConversion = "yes-positive",
+                        FlowRevenue = 29.99m,
+                        UiInputMethod = "keyboard-keypad",
+                        DeviceId = "device123",
+                        DevSessionId = "sessionABC",
+                        DevErrorCode = null,
+                        DevErrorDescription = null,
+                        DevInputDataCaptured = "{\"amount\":\"29.99\"}",
+                        DevSdkVersion = "sdk-v1.0.0",
+                        Timestamp = DateTime.UtcNow.AddDays(-1),
+                        // CreatedDate is set by the constructor
+                        ProcessedDate = null
+                    },
+                    new RawUserEvent
+                    {
+                        SpecTrack = "0.1.1",
+                        ProductArea = "user-onboarding",
+                        ProductValueStream = "registration",
+                        UiScreenPath = "/002-value-stream/registration/enter-details",
+                        UiScreenState = "validation-error",
+                        FlowConversion = "no-negative",
+                        FlowRevenue = null, // No revenue for this event
+                        UiInputMethod = "touchscreen",
+                        DeviceId = "device456",
+                        DevSessionId = "sessionXYZ",
+                        DevErrorCode = "VAL-001",
+                        DevErrorDescription = "Invalid email format",
+                        DevInputDataCaptured = "{\"email\":\"test@test\"}",
+                        DevSdkVersion = "sdk-v1.0.1",
+                        Timestamp = DateTime.UtcNow.AddHours(-5),
+                        // CreatedDate is set by the constructor
+                        ProcessedDate = null
+                    },
+                    new RawUserEvent
+                    {
+                        SpecTrack = "0.2.0",
+                        ProductArea = "account-management",
+                        ProductValueStream = "profile-update",
+                        UiScreenPath = "/003-value-stream/profile/update-address",
+                        UiScreenState = "success",
+                        FlowConversion = "yes-neutral", // Neutral conversion, e.g., profile update
+                        FlowRevenue = null,
+                        UiInputMethod = "voice-input",
+                        DeviceId = "device789",
+                        DevSessionId = "sessionDEF",
+                        DevErrorCode = null,
+                        DevErrorDescription = null,
+                        DevInputDataCaptured = "{\"address\":\"123 Main St\"}",
+                        DevSdkVersion = "sdk-v1.1.0",
+                        Timestamp = DateTime.UtcNow.AddMinutes(-30),
+                        // CreatedDate is set by the constructor
+                        ProcessedDate = null
+                    }
+                    // Add 20 more events for testing
+                };
+
+            for (int i = 1; i <= 20; i++)
             {
-                new RawUserEvent
+                rawEvents.Add(new RawUserEvent
                 {
-                    UserIdentifier = 1001,
-                    EventType = "login",
-                    EventDetails = JsonConvert.SerializeObject(new { event_name = "user_login", status = "success" }),
-                    Timestamp = DateTime.UtcNow.AddDays(-1),
-                    ClientInfo = JsonConvert.SerializeObject(new { app_version = "1.2.0", device_type = "mobile", os_version = "iOS 15.4" }),
-                    GeoData = "New York, USA",
-                    CreatedDate = DateTime.UtcNow.AddMinutes(-2), // Use UTC time
+                    SpecTrack = $"0.3.{i}",
+                    ProductArea = i % 3 == 0 ? "analytics" : (i % 2 == 0 ? "user-engagement" : "feature-discovery"),
+                    ProductValueStream = $"test-stream-{i}",
+                    UiScreenPath = $"/test/path{i}/screen{i}",
+                    UiScreenState = i % 4 == 0 ? "loading" : (i % 3 == 0 ? "error" : (i % 2 == 0 ? "empty" : "populated")),
+                    FlowConversion = i % 5 == 0 ? "yes-positive" : (i % 4 == 0 ? "no-negative" : (i % 3 == 0 ? "yes-neutral" : "no-neutral")),
+                    FlowRevenue = i % 5 == 0 ? (decimal)(i * 10.5) : (decimal?)null,
+                    UiInputMethod = i % 3 == 0 ? "gesture" : (i % 2 == 0 ? "external-device" : "biometric"),
+                    DeviceId = $"test-device-{Guid.NewGuid().ToString().Substring(0, 8)}",
+                    DevSessionId = $"test-session-{Guid.NewGuid().ToString().Substring(0, 12)}",
+                    DevErrorCode = i % 3 == 0 ? $"ERR-{i:000}" : null,
+                    DevErrorDescription = i % 3 == 0 ? $"Test error description {i}" : null,
+                    DevInputDataCaptured = $"{{\"test_data_{i}\":\"value_{i}\", \"user_action\":\"click_{i}\"}}",
+                    DevSdkVersion = $"sdk-v1.2.{i}",
+                    Timestamp = DateTime.UtcNow.AddSeconds(-(i * 15)), // Vary timestamps
+                                                                       // CreatedDate is set by the constructor
                     ProcessedDate = null
-                },
-                new RawUserEvent
-                {
-                    UserIdentifier = 1002,
-                    EventType = "purchase",
-                    EventDetails = JsonConvert.SerializeObject(new { event_name = "item_purchase", item_id = "SKU12345" }),
-                    Timestamp = DateTime.UtcNow.AddHours(-12),
-                    ClientInfo = JsonConvert.SerializeObject(new { app_version = "1.1.9", device_type = "tablet", os_version = "Android 12" }),
-                    GeoData = "London, UK",
-                    TransactionData = JsonConvert.SerializeObject(new { amount = 29.99, status = "completed", transaction_id = "TX789012", payment_method = "credit_card" }),
-                    CreatedDate = DateTime.UtcNow.AddMinutes(-10), // Use UTC time
-                    ProcessedDate = null
-                },
-                new RawUserEvent
-                {
-                    UserIdentifier = 1003,
-                    EventType = "registration",
-                    EventDetails = JsonConvert.SerializeObject(new { event_name = "new_user_registration", referral = "direct" }),
-                    Timestamp = DateTime.UtcNow.AddDays(-2),
-                    ClientInfo = JsonConvert.SerializeObject(new { app_version = "1.2.0", device_type = "desktop", os_version = "Windows 11" }),
-                    GeoData = "Sydney, Australia",
-                    CreatedDate = DateTime.UtcNow.AddMinutes(-11), // Use UTC time
-                    ProcessedDate = null
-                },
-                new RawUserEvent
-                {
-                    UserIdentifier = 1001,
-                    EventType = "purchase",
-                    EventDetails = JsonConvert.SerializeObject(new { event_name = "subscription_purchase", plan = "premium" }),
-                    Timestamp = DateTime.UtcNow.AddHours(-6),
-                    ClientInfo = JsonConvert.SerializeObject(new { app_version = "1.2.0", device_type = "mobile", os_version = "iOS 15.4" }),
-                    GeoData = "New York, USA",
-                    TransactionData = JsonConvert.SerializeObject(new { amount = 99.99, status = "completed", transaction_id = "TX789013", payment_method = "paypal" }),
-                    CreatedDate = DateTime.UtcNow.AddDays(-1),
-                    ProcessedDate = null
-                },
-                new RawUserEvent
-                {
-                    UserIdentifier = 1004,
-                    EventType = "login",
-                    EventDetails = JsonConvert.SerializeObject(new { event_name = "user_login", status = "failed", reason = "invalid_password" }),
-                    Timestamp = DateTime.UtcNow.AddHours(-2),
-                    ClientInfo = JsonConvert.SerializeObject(new { app_version = "1.1.8", device_type = "mobile", os_version = "Android 11" }),
-                    GeoData = "Berlin, Germany",
-                    CreatedDate = DateTime.UtcNow.AddDays(-1),
-                    ProcessedDate = null
-                }
-            };
+                });
+            }
 
             await context.RawUserEvents.AddRangeAsync(rawEvents, cancellationToken);
             await context.SaveChangesAsync(cancellationToken);
