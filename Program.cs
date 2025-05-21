@@ -1,5 +1,3 @@
-using DataTransform.Core.Interfaces;
-using DataTransform.Core.Models;
 using DataTransform.Data;
 using DataTransform.Interfaces;
 using DataTransform.Models;
@@ -50,6 +48,7 @@ builder.Services.AddScoped<IDataRepository<UserEvent>, ProcessedDataRepository>(
 
 // Register services
 builder.Services.AddScoped<IDataTransformService, DataTransformService>();
+builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddScoped<BackgroundJobService>();
 
 // Register database seeder service

@@ -1,4 +1,4 @@
-using DataTransform.Core.Interfaces;
+using DataTransform.Interfaces;
 using Hangfire;
 using Microsoft.Extensions.Logging;
 

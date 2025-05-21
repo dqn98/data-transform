@@ -1,4 +1,3 @@
-using DataTransform.Core.Models;
 using DataTransform.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,31 +18,50 @@ namespace DataTransform.Data
                 entity.Property(e => e.Id)
                     .HasColumnName("id")
                     .UseIdentityColumn();
-            
-                // Required fields
-                entity.Property(e => e.SpecTrack).HasColumnName("spec_track").HasMaxLength(100).IsRequired();
-                entity.Property(e => e.ProductArea).HasColumnName("product_area").HasMaxLength(100).IsRequired();
-                entity.Property(e => e.ProductValueStream).HasColumnName("product_value_stream").HasMaxLength(100).IsRequired();
-                entity.Property(e => e.UiScreenPath).HasColumnName("ui_screen_path").HasMaxLength(255).IsRequired();
-                entity.Property(e => e.UiScreenState).HasColumnName("ui_screen_state").HasMaxLength(100).IsRequired();
-                entity.Property(e => e.FlowConversion).HasColumnName("flow_conversion").HasMaxLength(100).IsRequired();
-            
-                // Conditional field
-                entity.Property(e => e.FlowRevenue).HasColumnName("flow_revenue").HasColumnType("decimal(10, 2)");
-            
-                // Optional fields
-                entity.Property(e => e.UiInputMethod).HasColumnName("ui_input_method").HasMaxLength(100);
-                entity.Property(e => e.DeviceId).HasColumnName("device_id").HasMaxLength(100);
-                entity.Property(e => e.DevSessionId).HasColumnName("dev_session_id").HasMaxLength(100);
-                entity.Property(e => e.DevErrorCode).HasColumnName("dev_error_code").HasMaxLength(100);
-                entity.Property(e => e.DevErrorDescription).HasColumnName("dev_error_description").HasMaxLength(255);
-                entity.Property(e => e.DevInputDataCaptured).HasColumnName("dev_input_data_captured").HasMaxLength(255);
-                entity.Property(e => e.DevSdkVersion).HasColumnName("dev_sdk_version").HasMaxLength(100);
-            
-                // System fields
-                entity.Property(e => e.Timestamp).HasColumnName("timestamp");
-                entity.Property(e => e.CreatedDate).HasColumnName("created_date");
-                entity.Property(e => e.ProcessedDate).HasColumnName("processed_date");
+                
+                entity.Property(e => e.Type)
+                    .HasMaxLength(200)
+                    .HasColumnName("type");
+
+                entity.Property(e => e.EventName)
+                    .HasMaxLength(200)
+                    .HasColumnName("event_name");
+
+                entity.Property(e => e.ProductArea)
+                    .HasColumnName("product_area");
+
+                entity.Property(e => e.ProductValueStream)
+                    .HasColumnName("product_value_stream");
+
+                entity.Property(e => e.UiScreenState)
+                    .HasColumnName("ui_screen_state");
+
+                entity.Property(e => e.EventId)
+                    .HasMaxLength(200)
+                    .HasColumnName("event_id");
+
+                entity.Property(e => e.FlowConversion)
+                    .HasColumnName("flow_conversion");
+
+                entity.Property(e => e.SessionId)
+                    .HasMaxLength(200)
+                    .HasColumnName("session_id");
+
+                entity.Property(e => e.TerminalId)
+                    .HasColumnName("terminal_id");
+
+                entity.Property(e => e.Amount)
+                    .HasColumnName("amount");
+
+                entity.Property(e => e.MemberId)
+                    .HasColumnName("member_id");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("created_date");
+
+                entity.Property(e => e.ProcessedDate)
+                    .HasColumnName("processed_date");
+
 
                 entity.Property(e => e.TerminalId).HasColumnName("terminal_id").HasMaxLength(20);
             });
@@ -62,8 +80,6 @@ namespace DataTransform.Data
                 entity.Property(e => e.EventTimestamp).HasColumnName("event_timestamp");
                 entity.Property(e => e.AppVersion).HasColumnName("app_version").HasMaxLength(50);
                 entity.Property(e => e.DeviceType).HasColumnName("device_type").HasMaxLength(50);
-                entity.Property(e => e.OsVersion).HasColumnName("os_version").HasMaxLength(50);
-                entity.Property(e => e.Location).HasColumnName("location").HasMaxLength(255);
                 entity.Property(e => e.PaymentAmount).HasColumnName("payment_amount").HasColumnType("decimal(10, 2)");
                 entity.Property(e => e.PaymentStatus).HasColumnName("payment_status").HasMaxLength(50);
                 entity.Property(e => e.TransactionId).HasColumnName("transaction_id").HasMaxLength(100);

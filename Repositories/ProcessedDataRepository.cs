@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
-using DataTransform.Core.Models;
 using DataTransform.Data;
 using DataTransform.Interfaces;
+using DataTransform.Models;
 
 namespace DataTransform.Repositories
 {

@@ -19,10 +19,6 @@ namespace DataTransform.Repositories
 
         public async Task AddAsync(RawUserEvent entity, CancellationToken cancellationToken = default)
         {
-            // Ensure all DateTime values are UTC
-            if (entity.Timestamp.Kind != DateTimeKind.Utc)
-                entity.Timestamp = DateTime.SpecifyKind(entity.Timestamp, DateTimeKind.Utc);
-            
             if (entity.CreatedDate.Kind != DateTimeKind.Utc)
                 entity.CreatedDate = DateTime.SpecifyKind(entity.CreatedDate, DateTimeKind.Utc);
             
@@ -37,9 +33,6 @@ namespace DataTransform.Repositories
             // Ensure all DateTime values are UTC
             foreach (var entity in entities)
             {
-                if (entity.Timestamp.Kind != DateTimeKind.Utc)
-                    entity.Timestamp = DateTime.SpecifyKind(entity.Timestamp, DateTimeKind.Utc);
-                
                 if (entity.CreatedDate.Kind != DateTimeKind.Utc)
                     entity.CreatedDate = DateTime.SpecifyKind(entity.CreatedDate, DateTimeKind.Utc);
                 
@@ -52,10 +45,6 @@ namespace DataTransform.Repositories
 
         public void Update(RawUserEvent entity, CancellationToken cancellationToken = default)
         {
-            // Ensure all DateTime values are UTC
-            if (entity.Timestamp.Kind != DateTimeKind.Utc)
-                entity.Timestamp = DateTime.SpecifyKind(entity.Timestamp, DateTimeKind.Utc);
-            
             if (entity.CreatedDate.Kind != DateTimeKind.Utc)
                 entity.CreatedDate = DateTime.SpecifyKind(entity.CreatedDate, DateTimeKind.Utc);
             
@@ -70,9 +59,6 @@ namespace DataTransform.Repositories
             // Ensure all DateTime values are UTC
             foreach (var entity in entities)
             {
-                if (entity.Timestamp.Kind != DateTimeKind.Utc)
-                    entity.Timestamp = DateTime.SpecifyKind(entity.Timestamp, DateTimeKind.Utc);
-                
                 if (entity.CreatedDate.Kind != DateTimeKind.Utc)
                     entity.CreatedDate = DateTime.SpecifyKind(entity.CreatedDate, DateTimeKind.Utc);
                 

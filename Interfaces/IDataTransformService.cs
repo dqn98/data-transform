@@ -1,4 +1,4 @@
-namespace DataTransform.Core.Interfaces
+namespace DataTransform.Interfaces
 {
     public interface IDataTransformService
     {

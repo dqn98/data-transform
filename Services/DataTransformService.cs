@@ -1,10 +1,6 @@
-using DataTransform.Core.Interfaces;
-using DataTransform.Core.Models;
 using DataTransform.Interfaces;
 using DataTransform.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
 namespace DataTransform.Services
 {
@@ -69,7 +65,6 @@ namespace DataTransform.Services
                     catch (Exception ex)
                     {
                         _logger.LogError(ex, $"Error transforming event with ID {rawEvent.Id}. This event will not be marked as processed.");
-                        // Optionally, implement a mechanism to move failed events to a dead-letter queue or mark them as failed
                     }
                 }
 
@@ -96,8 +91,6 @@ namespace DataTransform.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error during data transformation process");
-                // Consider re-throwing if the caller needs to handle it, or if it's a critical failure
-                // throw; 
             }
         }
 
@@ -107,22 +100,18 @@ namespace DataTransform.Services
             return new UserEvent
             {
                 // EventId is database-generated
-                UserId = ExtractUserId(rawEvent.DeviceId, rawEvent.DevSessionId),
-                EventName = DetermineEventName(rawEvent.UiScreenPath, rawEvent.UiScreenState),
-                EventType = rawEvent.ProductArea, // Direct mapping
-                EventTimestamp = DateTime.SpecifyKind(rawEvent.Timestamp, DateTimeKind.Utc), // Ensure UTC
-                AppVersion = rawEvent.SpecTrack, // Direct mapping
-                DeviceType = ExtractDeviceType(rawEvent.DeviceId),
-                OsVersion = rawEvent.DevSdkVersion, // Mapping SDK version to OS version; adjust if needed
-                Location = null, // No direct 'GeoData' in new RawUserEvent; set to null or derive if possible
-                PaymentAmount = rawEvent.FlowRevenue, // Direct mapping
-                PaymentStatus = DeterminePaymentStatus(rawEvent.FlowConversion),
-                TransactionId = null, // No direct 'TransactionId' in new RawUserEvent
-                PaymentMethod = null  // No direct 'PaymentMethod' in new RawUserEvent
+                UserId = rawEvent.MemberId,
+                EventName = DetermineEventName(rawEvent.EventName),
+                EventType = rawEvent.Type ?? "transaction",
+                EventTimestamp = DateTime.SpecifyKind(rawEvent.CreatedDate, DateTimeKind.Utc), // Ensure UTC
+                DeviceType = "Iphone",
+                PaymentAmount = rawEvent.Amount, // Direct mapping
+                PaymentStatus = DeterminePaymentStatus(rawEvent.UiScreenState),
+                TransactionId = null, 
+                PaymentMethod = "TAP"
             };
         }
 
-        // Helper methods for new transformation logic
         private long ExtractUserId(string? deviceId, string? devSessionId)
         {
             // Prioritize DevSessionId if it can be parsed as a long
@@ -141,14 +130,18 @@ namespace DataTransform.Services
             return 0; // Or throw an exception, or assign a specific "unknown user" ID
         }
 
-        private string DetermineEventName(string uiScreenPath, string uiScreenState)
+        private string DetermineEventName(string? uiScreenPath)
         {
             if (string.IsNullOrWhiteSpace(uiScreenPath))
             {
                 return "unknown_event";
             }
-            // Combine path and state for a descriptive event name
-            return $"{uiScreenPath.Replace("/", "_").Trim('_')}_{uiScreenState}".ToLowerInvariant();
+
+            Constants.Events.ParsedEventMap.TryGetValue(uiScreenPath, out var parsed);
+            
+            return string.IsNullOrEmpty(parsed)
+                ? "unknown_event"
+                : parsed;
         }
 
         private string? ExtractDeviceType(string? deviceId)
@@ -167,17 +160,14 @@ namespace DataTransform.Services
             return deviceId; // Or "unknown" if format is not as expected
         }
 
-        private string? DeterminePaymentStatus(string flowConversion)
+        private string DeterminePaymentStatus(string? screen)
         {
-            // Map flow_conversion to a payment status
-            return flowConversion?.ToLowerInvariant() switch
+            return screen switch
             {
-                "yes-positive" => "completed",
-                "yes-negative" => "failed",
-                "yes-neutral" => "processed", // Or another status for neutral outcomes
-                "no-positive" => "cancelled", // Example
-                "no-negative" => "rejected",  // Example
-                _ => "unknown" // Default or if flowConversion is unexpected
+                Constants.Events.PntTnxPaymentSuccessfulScreenViewed => "success",
+                Constants.Events.PntTnxPaymentErrorScreenViewed => "failed",
+                Constants.Events.PntTnxPaymentDeclineScreenViewed => "declined",
+                _ => "unknown"
             };
         }
 
@@ -189,11 +179,5 @@ namespace DataTransform.Services
             
             return BitConverter.ToInt64(buffer, 0);
         }
-
-        // Old parsing methods are removed as their corresponding fields 
-        // (ClientInfo, TransactionData, EventDetails) are no longer used directly for these mappings.
-        // private (string appVersion, string deviceType, string osVersion) ParseClientInfo(string clientInfo) { ... }
-        // private (decimal? amount, string? status, string? transactionId, string? method) ParseTransactionData(string transactionData) { ... }
-        // private string ExtractEventName(string eventDetails) { ... }
     }
 }
