@@ -32,6 +32,8 @@ namespace DataTransform.Models
         public DateTime CreatedDate { get; set; }
         public DateTime? ProcessedDate { get; set; }
         
+        public long TerminalId { get; set; }
+        
         // Constructor to set default values
         public RawUserEvent()
         {

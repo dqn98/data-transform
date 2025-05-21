@@ -44,6 +44,8 @@ namespace DataTransform.Data
                 entity.Property(e => e.Timestamp).HasColumnName("timestamp");
                 entity.Property(e => e.CreatedDate).HasColumnName("created_date");
                 entity.Property(e => e.ProcessedDate).HasColumnName("processed_date");
+
+                entity.Property(e => e.TerminalId).HasColumnName("terminal_id").HasMaxLength(20);
             });
 
             // Configure UserEvent entity
@@ -66,6 +68,11 @@ namespace DataTransform.Data
                 entity.Property(e => e.PaymentStatus).HasColumnName("payment_status").HasMaxLength(50);
                 entity.Property(e => e.TransactionId).HasColumnName("transaction_id").HasMaxLength(100);
                 entity.Property(e => e.PaymentMethod).HasColumnName("payment_method").HasMaxLength(50);
+                
+                entity.Property(e => e.TerminalId).HasColumnName("terminal_id").HasMaxLength(20);
+                entity.Property(e => e.DMemberKey).HasColumnName("d_memberkey");
+                entity.Property(e => e.DEftTerminalKey).HasColumnName("d_eftterminalkey");
+                entity.Property(e => e.DVehicleTypeKey).HasColumnName("d_vehicletypekey");
             });
         }
     }
