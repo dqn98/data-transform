@@ -7,6 +7,7 @@ namespace DataTransform.Data
     {
         public DbSet<RawUserEvent> RawUserEvents { get; set; } = null!;
         public DbSet<UserEvent> UserEvents { get; set; } = null!;
+        public DbSet<TerminalData> TerminalData { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -90,6 +91,26 @@ namespace DataTransform.Data
                 entity.Property(e => e.DEftTerminalKey).HasColumnName("d_eftterminalkey");
                 entity.Property(e => e.DVehicleTypeKey).HasColumnName("d_vehicletypekey");
             });
+        
+            // Configure TerminalData entity
+            modelBuilder.Entity<TerminalData>()
+                .ToTable("terminal_data");
+                
+            modelBuilder.Entity<TerminalData>()
+                .Property(t => t.TerminalId)
+                .HasColumnName("terminalid");
+                
+            modelBuilder.Entity<TerminalData>()
+                .Property(t => t.D_EftterminalKey)
+                .HasColumnName("D_EftterminalKey");
+                
+            modelBuilder.Entity<TerminalData>()
+                .Property(t => t.D_VehicleTypeKey)
+                .HasColumnName("D_VehicleTypeKey");
+                
+            modelBuilder.Entity<TerminalData>()
+                .Property(t => t.D_MemberKey)
+                .HasColumnName("D_MemberKey");
         }
     }
 }

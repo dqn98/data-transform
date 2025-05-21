@@ -49,6 +49,7 @@ builder.Services.AddScoped<IDataRepository<UserEvent>, ProcessedDataRepository>(
 // Register services
 builder.Services.AddScoped<IDataTransformService, DataTransformService>();
 builder.Services.AddScoped<IEventService, EventService>();
+builder.Services.AddScoped<IQueryRepository, QueryRepository>();
 builder.Services.AddScoped<BackgroundJobService>();
 
 // Register database seeder service
@@ -72,7 +73,7 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
 }
 
-// app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
 app.UseStaticFiles(); // Add this line to serve static files from wwwroot
 

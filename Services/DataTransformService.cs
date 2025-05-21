@@ -8,19 +8,23 @@ namespace DataTransform.Services
     {
         private readonly IDataRepository<RawUserEvent> _rawRepository;
         private readonly IDataRepository<UserEvent> _processedRepository;
+        private readonly IQueryRepository _queryRepository;
         private readonly ILogger<DataTransformService> _logger;
 
         public DataTransformService(
             IDataRepository<RawUserEvent> rawRepository,
             IDataRepository<UserEvent> processedRepository,
+            IQueryRepository queryRepository,
             ILogger<DataTransformService> logger)
         {
             ArgumentNullException.ThrowIfNull(rawRepository);
             ArgumentNullException.ThrowIfNull(processedRepository);
+            ArgumentNullException.ThrowIfNull(queryRepository);
             ArgumentNullException.ThrowIfNull(logger);
 
             _rawRepository = rawRepository;
             _processedRepository = processedRepository;
+            _queryRepository = queryRepository;
             _logger = logger;
         }
 
@@ -51,11 +55,13 @@ namespace DataTransform.Services
                 {
                     try
                     {
-                        var processedEvent = TransformEvent(rawEvent);
+                        var tid = rawEvent.TerminalId;
+                        TerminalData? terminal = await _queryRepository.GetVehicleIdQueryMapping(tid);
                         
-                        processedEvent.DEftTerminalKey = GetDummyLong();
-                        processedEvent.DVehicleTypeKey = GetDummyLong();
-                        processedEvent.DMemberKey = GetDummyLong();
+                        var processedEvent = TransformEvent(rawEvent);
+                        processedEvent.DVehicleTypeKey = terminal?.D_VehicleTypeKey ?? 0;
+                        processedEvent.DEftTerminalKey = terminal?.D_EftterminalKey ?? 0;
+                        processedEvent.DMemberKey = terminal?.D_MemberKey ?? 0;
                         
                         processedEvents.Add(processedEvent);
                         
@@ -101,33 +107,16 @@ namespace DataTransform.Services
             {
                 // EventId is database-generated
                 UserId = rawEvent.MemberId,
+                TerminalId = rawEvent.TerminalId,
                 EventName = DetermineEventName(rawEvent.EventName),
                 EventType = rawEvent.Type ?? "transaction",
                 EventTimestamp = DateTime.SpecifyKind(rawEvent.CreatedDate, DateTimeKind.Utc), // Ensure UTC
                 DeviceType = "Iphone",
                 PaymentAmount = rawEvent.Amount, // Direct mapping
-                PaymentStatus = DeterminePaymentStatus(rawEvent.UiScreenState),
+                PaymentStatus = DeterminePaymentStatus(rawEvent.EventName),
                 TransactionId = null, 
                 PaymentMethod = "TAP"
             };
-        }
-
-        private long ExtractUserId(string? deviceId, string? devSessionId)
-        {
-            // Prioritize DevSessionId if it can be parsed as a long
-            if (!string.IsNullOrEmpty(devSessionId) && long.TryParse(devSessionId, out var userIdFromSession))
-            {
-                return userIdFromSession;
-            }
-            // Fallback to a hash of DeviceId or a default value if DeviceId is null/empty
-            if (!string.IsNullOrEmpty(deviceId))
-            {
-                // Example: simple hash. Replace with a more robust hashing or lookup if needed.
-                return deviceId.GetHashCode(); 
-            }
-            // Default or error case
-            _logger.LogWarning("Could not determine UserId from DeviceId or DevSessionId.");
-            return 0; // Or throw an exception, or assign a specific "unknown user" ID
         }
 
         private string DetermineEventName(string? uiScreenPath)
@@ -143,23 +132,7 @@ namespace DataTransform.Services
                 ? "unknown_event"
                 : parsed;
         }
-
-        private string? ExtractDeviceType(string? deviceId)
-        {
-            if (string.IsNullOrEmpty(deviceId))
-            {
-                return "unknown";
-            }
-            // Example: if deviceId is "mobile-android-123xyz", extract "mobile-android"
-            // This is a placeholder; adjust based on your actual deviceId format
-            var parts = deviceId.Split('-');
-            if (parts.Length > 1)
-            {
-                return string.Join("-", parts.Take(Math.Min(parts.Length, 2))); // Takes first two parts e.g. "type-subtype"
-            }
-            return deviceId; // Or "unknown" if format is not as expected
-        }
-
+        
         private string DeterminePaymentStatus(string? screen)
         {
             return screen switch
