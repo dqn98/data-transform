@@ -56,6 +56,11 @@ namespace DataTransform.Services
                     try
                     {
                         var processedEvent = TransformEvent(rawEvent);
+                        
+                        processedEvent.DEftTerminalKey = GetDummyLong();
+                        processedEvent.DVehicleTypeKey = GetDummyLong();
+                        processedEvent.DMemberKey = GetDummyLong();
+                        
                         processedEvents.Add(processedEvent);
                         
                         rawEvent.ProcessedDate = DateTime.UtcNow; // Use UTC time
@@ -174,6 +179,15 @@ namespace DataTransform.Services
                 "no-negative" => "rejected",  // Example
                 _ => "unknown" // Default or if flowConversion is unexpected
             };
+        }
+
+        private long GetDummyLong()
+        {
+            var random = new Random();
+            byte[] buffer = new byte[8];
+            random.NextBytes(buffer);
+            
+            return BitConverter.ToInt64(buffer, 0);
         }
 
         // Old parsing methods are removed as their corresponding fields 

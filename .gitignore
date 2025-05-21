@@ -5,6 +5,9 @@ out/
 node_modules/ 
 client-app/node_modules/
 
+appsettings.json
+appsettings.*.json
+
 # Visual Studio files
 .idea
 .vs/
